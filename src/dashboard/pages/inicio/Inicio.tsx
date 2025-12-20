@@ -19,6 +19,7 @@ interface ContextType {
   ideas: Idea[];
   onUpdate: (id: string, updates: Partial<Idea>) => void;
   onDelete: (id: string) => void;
+  onArchive: (id: string, isArchived: boolean) => void;
   createIdea: (input: { transcription: string; duration: number }) => Promise<Idea | null>;
   createIdeaWithAudio: (input: { audioBlob: Blob; duration: number }) => Promise<Idea | null>;
   getIdeaDetails: (id: string) => Promise<Idea | null>;
@@ -30,7 +31,7 @@ interface InicioProps {
 }
 
 export default function Inicio({ search }: InicioProps) {
-  const { ideas, onDelete, createIdea, createIdeaWithAudio, getIdeaDetails, search: contextSearch } = useOutletContext<ContextType>();
+  const { ideas, onDelete, onArchive, createIdea, createIdeaWithAudio, getIdeaDetails, search: contextSearch } = useOutletContext<ContextType>();
   const searchValue = typeof search === 'string' ? search : contextSearch || '';
   const { ideaId } = useParams<{ ideaId?: string }>();
   const navigate = useNavigate();
@@ -212,6 +213,8 @@ export default function Inicio({ search }: InicioProps) {
               key={idea.id}
               idea={idea as any}
               onClick={() => setSelectedIdeaId(idea.id)}
+              onArchive={(id) => onArchive(id, true)}
+              onDelete={onDelete}
             />
           ))}
         </div>

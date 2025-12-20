@@ -82,6 +82,7 @@ export const ideaMapper = {
       audioDuration: entry.duration,
       aiSuggestions: [],
       tags: [],
+      isArchived: !!entry.is_archived,
     };
   },
 

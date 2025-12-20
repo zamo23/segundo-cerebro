@@ -209,6 +209,34 @@ export function useIdeas() {
   );
 
   /**
+   * Archiva o desarchiva una idea
+   * @param id - ID de la idea
+   * @param isArchived - true para archivar, false para desarchivar
+   */
+  const archiveIdea = useCallback(
+    async (id: string, isArchived: boolean): Promise<boolean> => {
+      try {
+        const token = await getToken();
+        if (!token) {
+          throw new Error('No token available');
+        }
+        await ideaService.archive(id, isArchived, token);
+        setState(prev => ({
+          ...prev,
+          ideas: prev.ideas.filter(idea => idea.id !== id),
+          error: null,
+        }));
+        return true;
+      } catch (err) {
+        const errorMessage = getErrorMessage(err);
+        setState(prev => ({ ...prev, error: errorMessage }));
+        return false;
+      }
+    },
+    [getToken]
+  );
+
+  /**
    * Obtiene los detalles de una idea específica
    */
   const getIdeaDetails = useCallback(
@@ -246,6 +274,7 @@ export function useIdeas() {
     createIdeaWithAudio,
     updateIdea,
     deleteIdea,
+    archiveIdea,
     getIdeaDetails,
     refetch,
   };

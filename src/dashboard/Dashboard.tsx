@@ -8,7 +8,7 @@ import type { Idea } from '../types/domain';
 import { useState } from 'react';
 
 export default function Dashboard() {
-  const { ideas, loading, error, updateIdea, deleteIdea, createIdea, createIdeaWithAudio, getIdeaDetails } = useIdeas();
+  const { ideas, loading, error, updateIdea, deleteIdea, archiveIdea, createIdea, createIdeaWithAudio, getIdeaDetails } = useIdeas();
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ export default function Dashboard() {
         </div>
 
         <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-8 pb-24 sm:pb-24 lg:pb-8">
-          <Outlet context={{ ideas, onUpdate: updateIdea, onDelete: deleteIdea, createIdea, createIdeaWithAudio, getIdeaDetails, search }} />
+          <Outlet context={{ ideas, onUpdate: updateIdea, onDelete: deleteIdea, onArchive: archiveIdea, createIdea, createIdeaWithAudio, getIdeaDetails, search }} />
         </main>
       </div>
 

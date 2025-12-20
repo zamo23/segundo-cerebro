@@ -24,6 +24,7 @@ export interface ApiEntry {
   user_id?: string;
   category_id?: string;
   duration?: number;
+  is_archived?: boolean;
 }
 
 export interface ApiResponse {

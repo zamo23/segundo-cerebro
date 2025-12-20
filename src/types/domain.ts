@@ -16,6 +16,7 @@ export interface Idea {
   aiMarkdown?: string;
   aiSuggestions?: string[];
   tags?: string[];
+  isArchived?: boolean;
 }
 
 export type IdeaInput = {

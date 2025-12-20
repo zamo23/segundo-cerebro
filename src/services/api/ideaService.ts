@@ -22,6 +22,21 @@ export const ideaService = {
   },
 
   /**
+   * Obtiene todas las ideas archivadas del usuario
+   */
+  async getArchived(token: string, limit = 10, offset = 0): Promise<ApiEntry[]> {
+    logApiCall('GET', `/entries?include_archived=true&limit=${limit}&offset=${offset}`);
+
+    const data = await apiCall<ApiResponse>(
+      `/entries?include_archived=true&limit=${limit}&offset=${offset}`,
+      { token, method: 'GET' }
+    );
+
+    // Filtrar solo las ideas archivadas
+    return (data.entries || []).filter(entry => entry.is_archived === 1);
+  },
+
+  /**
    * Obtiene una idea específica por ID
    */
   async getById(id: string, token: string): Promise<ApiEntry> {
@@ -146,5 +161,30 @@ export const ideaService = {
       token,
       method: 'DELETE',
     });
+  },
+
+  /**
+   * Archiva o desarchiva una idea
+   * @param id - ID de la idea
+   * @param isArchived - true para archivar, false para desarchivar
+   * @param token - Token de autenticación
+   */
+  async archive(id: string, isArchived: boolean, token: string): Promise<{ entry_id: string; is_archived: boolean }> {
+    logApiCall('PATCH', `/entries/${id}/archive`, { is_archived: isArchived });
+
+    const data = await apiCall<{ success: boolean; message: string; entry_id: string }>(`/entries/${id}/archive`, {
+      token,
+      method: 'PATCH',
+      body: JSON.stringify({ is_archived: isArchived }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!data.success || !data.entry_id) {
+      throw new Error('No entry_id returned from API');
+    }
+
+    return { entry_id: data.entry_id, is_archived: isArchived };
   },
 };
